@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNO Game</title>
+    <script>
+        // Helper function to send AJAX requests
+        function sendRequest(action, data, callback) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "game.php", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
+            var urlEncodedData = "action=" + action + "&" + data;
+            xhr.send(urlEncodedData);
+
+            xhr.onload = function() {
+                callback(xhr.responseText);
+            };
+        }
+
+        // Join the game
+        function joinGame() {
+            var playerName = document.getElementById("playerName").value;
+            sendRequest("join", "playerName=" + encodeURIComponent(playerName), function(response) {
+                alert(response);
+                document.getElementById("playerName").disabled = true;
+                document.getElementById("joinButton").disabled = true;
+            });
+            document.getElementById("startGame").style.display = "block";
+        }
+
+        // Start the game
+        function startGame() {
+            sendRequest("start", "", function(response) {
+                alert(response);
+            });
+        }
+
+        // Play a card
+        function playCard(playerId, card) {
+            sendRequest("play", "playerId=" + playerId + "&card=" + encodeURIComponent(card), function(response) {
+                alert(response);
+                updateGameState();
+            });
+        }
+
+        // Update the game state (fetch the latest state)
+        function updateGameState() {
+            sendRequest("state", "", function(response) {
+                document.getElementById("gameState").innerHTML = JSON.parse(response);
+                console.log(JSON.parse(response))
+            });
+        }
+
+    setInterval(updateGameState, 500);
+    </script>
+</head>
+<body>
+    <h1>UNO Game</h1>
+
+    <pre id="gameState">
+        <!-- Game state (e.g., players, cards) will be displayed here -->
+    </pre>
+
+    <!-- Join Game Section -->
+    <div id="joinGame">
+        <input type="text" id="playerName" placeholder="Enter your name" required>
+        <button id="joinButton" onclick="joinGame()">Join Game</button>
+    </div>
+
+    <!-- Start Game Section -->
+    <div id="startGame" style="display: none;">
+        <button onclick="startGame()">Start Game</button>
+    </div>
+
+    <!-- Game Actions Section -->
+    <div id="playCard" style="display: none;">
+        <!-- Dynamically populated with player cards -->
+    </div>
+</body>
+</html>
