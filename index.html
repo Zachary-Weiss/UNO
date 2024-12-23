@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNO Game</title>
     <script>
+        var id = 0;
+        var gameState = {};
         // Helper function to send AJAX requests
         function sendRequest(action, data, callback) {
             var xhr = new XMLHttpRequest();
@@ -22,6 +24,7 @@
         // Join the game
         function joinGame() {
             var playerName = document.getElementById("playerName").value;
+            id = gameState.players.length;
             sendRequest("join", "playerName=" + encodeURIComponent(playerName), function(response) {
                 alert(response);
                 document.getElementById("playerName").disabled = true;
@@ -49,19 +52,21 @@
         // Update the game state (fetch the latest state)
         function updateGameState() {
             sendRequest("state", "", function(response) {
-                var gameState = JSON.parse(response);
+                gameState = JSON.parse(response);
                 document.getElementById("gameState").innerHTML = JSON.stringify(gameState, null, 2);
                 
                 // Display player's hand
                 var playCardDiv = document.getElementById("playCard");
                 playCardDiv.innerHTML = ''; // Clear previous cards
-                var currentPlayer = gameState.players[gameState.current_turn];
+                var currentPlayer = gameState.players[id];
+
+                console.log(id);
                 
                 currentPlayer.hand.forEach(function(card, index) {
                     var cardButton = document.createElement("button");
                     cardButton.innerHTML = card;
                     cardButton.onclick = function() {
-                        playCard(gameState.current_turn, card);
+                        playCard(id, card);
                     };
                     playCardDiv.appendChild(cardButton);
                 });
