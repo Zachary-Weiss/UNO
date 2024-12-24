@@ -104,8 +104,8 @@ function playTurn($playerId, $card) {
     //    $_SESSION['game']['players'][$playerId]['hand'],
     //    [$card]
     //);
-    $_SESSION['game']['players'][$playerId]['hand'] = array_splice($_SESSION['game']['players'][$playerId]['hand'], array_search($card, $_SESSION['game']['players'][$playerId]['hand']),1);
-    //$_SESSION['game']['players'][$playerId]['hand'] = remEl(array_search($card, $_SESSION['game']['players'][$playerId]['hand']), $_SESSION['game']['players'][$playerId]['hand']);
+    //$_SESSION['game']['players'][$playerId]['hand'] = array_splice($_SESSION['game']['players'][$playerId]['hand'], array_search($card, $_SESSION['game']['players'][$playerId]['hand']),1);
+    $_SESSION['game']['players'][$playerId]['hand'] = remEl(array_search($card, $_SESSION['game']['players'][$playerId]['hand']), $_SESSION['game']['players'][$playerId]['hand']);
     $_SESSION['game']['discard_pile'][] = $card;
 
     // Move to the next player
