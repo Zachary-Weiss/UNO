@@ -4,9 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>UNO Game</title>
+    <link href="style.css" rel="stylesheet"/>
     <script>
         var id = 0;
         var gameState = {};
+
         // Helper function to send AJAX requests
         function sendRequest(action, data, callback) {
             var xhr = new XMLHttpRequest();
@@ -21,22 +23,55 @@
             };
         }
 
+        function createCardElement(card, parent) {
+            var cardButton = document.createElement("card");
+            cardButton.innerHTML = card.split("-")[1];
+            if(card.split("-")[1] == "draw2") {
+                cardButton.innerHTML = "+2";
+            }
+            if(card.split("-")[1] == "draw4") {
+                cardButton.innerHTML = "+4";
+            }
+            if(card.split("-")[1] == "draw8") {
+                cardButton.innerHTML = "+8";
+            }
+            if(card.split("-")[1] == "draw40") {
+                cardButton.innerHTML = "+40";
+            }
+            if(card.split("-")[1] == "reverse") {
+                cardButton.innerHTML = "<img src='./reverse.png' />";
+            }
+            if(card.split("-")[1] == "skip") {
+                cardButton.innerHTML = "<img src='./skip.png' />";
+            }
+            cardButton.className = card.split("-")[0] + "Card";
+            cardButton.onclick = function() {
+                playCard(id, card);
+            };
+            parent.appendChild(cardButton);
+        }
+
         // Join the game
         function joinGame() {
-            var playerName = document.getElementById("playerName").value;
-            id = gameState.players.length;
-            sendRequest("join", "playerName=" + encodeURIComponent(playerName), function(response) {
-                alert(response);
-                document.getElementById("playerName").disabled = true;
-                document.getElementById("joinButton").disabled = true;
+            sendRequest("getid", "", function(resid) {
+                id = parseInt(resid);
+                console.log("ID received. ID: " + resid);
+                
+                var playerName = document.getElementById("playerName").value;
+                sendRequest("join", "playerName=" + encodeURIComponent(playerName), function(response) {
+                    document.getElementById("playerName").remove();
+                    document.getElementById("joinButton").remove();
+
+                    setInterval(updateGameState, 1000);
+                });
+                document.getElementById("startGame").style.display = "block";
             });
-            document.getElementById("startGame").style.display = "block";
         }
 
         // Start the game
         function startGame() {
             sendRequest("start", "", function(response) {
-                alert(response);
+                document.getElementById("extraOptions").innerHTML = "<button id='drawCard' onClick='drawCard(" + id + ")'>Draw card</button>"
                 updateGameState();
             });
         }
@@ -44,7 +79,12 @@
         // Play a card
         function playCard(playerId, card) {
             sendRequest("play", "playerId=" + playerId + "&card=" + encodeURIComponent(card), function(response) {
-                alert(response);
+                updateGameState();
+            });
+        }
+
+        function drawCard(playerId) {
+            sendRequest("draw", "playerId=" + playerId, function(response) {
                 updateGameState();
             });
         }
@@ -53,32 +93,60 @@
         function updateGameState() {
             sendRequest("state", "", function(response) {
                 gameState = JSON.parse(response);
-                document.getElementById("gameState").innerHTML = JSON.stringify(gameState, null, 2);
-                
-                // Display player's hand
-                var playCardDiv = document.getElementById("playCard");
-                playCardDiv.innerHTML = ''; // Clear previous cards
-                var currentPlayer = gameState.players[id];
+                if(gameState.status == "started") {
+                    if(document.getElementById("startGame")) {
+                        document.getElementById("startGame").remove();
+                    }
+                    document.getElementById("gameState").innerHTML = "<h1>Discard Pile</h1>";
+                    createCardElement(gameState.discard_pile[gameState.discard_pile.length-1], document.getElementById("gameState"));
+                    
+                    document.getElementById("extraOptions").innerHTML = "<button id='drawCard' onClick='drawCard(" + id + ")'></button>"
+                    
+                    // Display player's hand
+                    var playCardDiv = document.getElementById("playCard");
+                    playCardDiv.innerHTML = ''; // Clear previous cards
+                    var currentPlayer = gameState.players[id];
 
-                console.log(id);
-                
-                currentPlayer.hand.forEach(function(card, index) {
-                    var cardButton = document.createElement("button");
-                    cardButton.innerHTML = card;
-                    cardButton.onclick = function() {
-                        playCard(id, card);
-                    };
-                    playCardDiv.appendChild(cardButton);
-                });
+                    console.log(id);
+                    
+                    currentPlayer.hand.forEach(function(card, index) {
+                        var cardButton = document.createElement("card");
+                        cardButton.innerHTML = card.split("-")[1];
+                        if(card.split("-")[1] == "draw2") {
+                            cardButton.innerHTML = "+2";
+                        }
+                        if(card.split("-")[1] == "draw4") {
+                            cardButton.innerHTML = "+4";
+                        }
+                        if(card.split("-")[1] == "draw8") {
+                            cardButton.innerHTML = "+8";
+                        }
+                        if(card.split("-")[1] == "draw40") {
+                            cardButton.innerHTML = "+40";
+                        }
+                        if(card.split("-")[1] == "reverse") {
+                            cardButton.innerHTML = "<img src='./reverse.png' />";
+                        }
+                        if(card.split("-")[1] == "skip") {
+                            cardButton.innerHTML = "<img src='./skip.png' />";
+                        }
+                        cardButton.className = card.split("-")[0] + "Card";
+                        cardButton.onclick = function() {
+                            playCard(id, card);
+                        };
+                        playCardDiv.appendChild(cardButton);
+
+                        console.log("Finished update tick - game started");
+                    });
+                } else {
+                    // Display some sort of player list here... WITH ICONS!!!
+                    console.log("update function call - game idle")
+                }
             });
         }
-
-        setInterval(updateGameState, 500);
     </script>
 </head>
 <body>
-    <h1>UNO Game</h1>
-
     <pre id="gameState">
         <!-- Game state (e.g., players, cards) will be displayed here -->
     </pre>
@@ -97,6 +165,10 @@
     <!-- Game Actions Section -->
     <div id="playCard">
         <!-- Dynamically populated with player cards -->
+    </div>
+
+    <div id="extraOptions">
+        <!-- Dynamically populated with extra options -->
     </div>
 </body>
 </html>

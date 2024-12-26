@@ -1,0 +1,9 @@
+add player veiwer before load w/ username checker to remove bad chars
+
+animations instead of alerts
+
+delete players on leave
+
+easy rejoin for devtools
+
+winning

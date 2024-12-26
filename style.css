@@ -1,0 +1,71 @@
+body {
+    background: #000530;
+    color: white;
+    display: grid;
+    place-content: center
+}
+
+#drawCard {
+    background: url("draw.png");
+    background-size: contain;
+    width: 200px;
+    height: 200px;
+    border-radius: 10px;
+    border: 1px solid gray;
+    transition: 0.3s;
+}
+
+#drawCard:hover {
+    width: 220px;
+    height: 220px;
+}
+
+#playCard {  
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    grid-template-rows: auto auto auto;
+    grid-template-columns: auto auto auto auto auto auto auto;
+    padding: 1%;
+}
+
+card {
+    display:block;
+    border-radius: 10px;
+    width: 100px;
+    height: 150px;
+    box-shadow: 0px 0px 10px rgb(0, 0, 0);
+    font-family: "Lucida Console", "Courier New", monospace;
+    font-size:50px;
+    color:black;
+    text-align: center;
+    padding:10px;
+    margin:10px;
+    transition: 0.3s;
+}
+
+card:hover {width:120px;height:170px;}
+
+.redCard {
+    background-image: linear-gradient( 109.6deg,  rgba(204,0,0,1) 11.2%, rgba(68,0,0,1) 100.6% );
+    border: 1px solid rgb(107, 0, 0);
+}
+
+.blueCard {
+    background: #B2FEFA;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #0ED2F7, #B2FEFA);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #0ED2F7, #B2FEFA); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border: 1px solid rgb(10, 0, 97);
+}
+
+.greenCard {
+    background-image: linear-gradient( 109.6deg,  rgba(34,126,34,1) 11.2%, rgba(99,162,17,1) 91.1% );
+    border: 1px solid rgb(17, 102, 0);
+}
+
+.yellowCard {
+    background: #F7971E;  /* fallback for old browsers */
+    background: -webkit-linear-gradient(to right, #FFD200, #F7971E);  /* Chrome 10-25, Safari 5.1-6 */
+    background: linear-gradient(to right, #FFD200, #F7971E); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    border: 1px solid rgb(155, 144, 0);
+}
