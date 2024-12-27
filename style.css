@@ -6,7 +6,7 @@ body {
 }
 
 #drawCard {
-    background: url("draw.png");
+    background: url("img/draw.png");
     background-size: contain;
     width: 200px;
     height: 200px;

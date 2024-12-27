@@ -7,3 +7,9 @@ delete players on leave
 easy rejoin for devtools
 
 winning
+
+sorted hands
+
+put source images in their own folder
+
+stop adding draw element before game accually starts ( too many players )

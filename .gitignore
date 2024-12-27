@@ -1,0 +1,2 @@
+#Ignore game state files in the home directory. Game states that we need for testing can go in gamestates
+/*.json
