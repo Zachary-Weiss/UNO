@@ -29,19 +29,19 @@
             if(card.split("-")[1] == "draw2") {
                 cardButton.innerHTML = "+2";
             }
-            if(card.split("-")[1] == "draw4") {
+            else if(card.split("-")[1] == "draw4") {
                 cardButton.innerHTML = "+4";
             }
-            if(card.split("-")[1] == "draw8") {
+            else if(card.split("-")[1] == "draw8") {
                 cardButton.innerHTML = "+8";
             }
-            if(card.split("-")[1] == "draw40") {
+            else if(card.split("-")[1] == "draw40") {
                 cardButton.innerHTML = "+40";
             }
-            if(card.split("-")[1] == "reverse") {
+            else if(card.split("-")[1] == "reverse") {
                 cardButton.innerHTML = "<img src='./img/reverse.png' />";
             }
-            if(card.split("-")[1] == "skip") {
+            else if(card.split("-")[1] == "skip") {
                 cardButton.innerHTML = "<img src='./img/skip.png' />";
             }
             cardButton.className = card.split("-")[0] + "Card";
@@ -89,6 +89,13 @@
             });
         }
 
+        //This function can be modified to test different php functions
+        function testFeature(playerId, card, index) {
+            sendRequest("test", "playerId=" + playerId + "&card=" + encodeURIComponent(card) + "&index=" + index, function(response) {
+                console.log(response);
+            });
+        }
+
         // Update the game state (fetch the latest state)
         function updateGameState() {
             sendRequest("state", "", function(response) {
@@ -99,7 +106,6 @@
                     }
                     document.getElementById("gameState").innerHTML = "<h1>Discard Pile</h1>";
                     createCardElement(gameState.discard_pile[gameState.discard_pile.length-1], document.getElementById("gameState"));
-                    
                     document.getElementById("extraOptions").innerHTML = "<button id='drawCard' onClick='drawCard(" + id + ")'></button>"
                     
                     // Display player's hand
@@ -115,19 +121,19 @@
                         if(card.split("-")[1] == "draw2") {
                             cardButton.innerHTML = "+2";
                         }
-                        if(card.split("-")[1] == "draw4") {
+                        else if(card.split("-")[1] == "draw4") {
                             cardButton.innerHTML = "+4";
                         }
-                        if(card.split("-")[1] == "draw8") {
+                        else if(card.split("-")[1] == "draw8") {
                             cardButton.innerHTML = "+8";
                         }
-                        if(card.split("-")[1] == "draw40") {
+                        else if(card.split("-")[1] == "draw40") {
                             cardButton.innerHTML = "+40";
                         }
-                        if(card.split("-")[1] == "reverse") {
+                        else if(card.split("-")[1] == "reverse") {
                             cardButton.innerHTML = "<img src='./img/reverse.png' />";
                         }
-                        if(card.split("-")[1] == "skip") {
+                        else if(card.split("-")[1] == "skip") {
                             cardButton.innerHTML = "<img src='./img/skip.png' />";
                         }
                         cardButton.className = card.split("-")[0] + "Card";
